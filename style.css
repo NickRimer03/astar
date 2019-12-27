@@ -1,0 +1,77 @@
+#fieldset {
+  box-sizing: border-box;
+}
+
+#no-moves {
+  display: none;
+  color: #f00;
+}
+
+div {
+  font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+  font-size: 12px;
+  user-select: none;
+}
+
+.info {
+  font-size: 24px;
+}
+
+.tip {
+  display: block;
+  font-style: italic;
+  color: darkgray;
+}
+
+.cell {
+  position: absolute;
+  width: 64px;
+  height: 64px;
+  border: 1px solid #f0f0f0;
+  box-sizing: border-box;
+}
+
+.cell.opened {
+  background-color: darkgray;
+}
+
+.cell.closed {
+  background-color: coral;
+}
+
+.cell.root {
+  background-color: darkkhaki;
+}
+
+.divf {
+  color: darkred;
+}
+
+.divg {
+  position: absolute;
+  bottom: 0;
+  color: lawngreen;
+}
+
+.divm {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  color: mediumblue;
+}
+
+._0 {
+  background-color: #f36273;
+}
+
+._1 {
+  background-color: #2a9c9d;
+}
+
+._3 {
+  background-color: #f7e293 !important;
+}
+
+._8 {
+  background-color: #fdb078 !important;
+}

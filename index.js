@@ -3,15 +3,17 @@ class Astar {
     const { field = [[]], rules, cost, orthogonal = false } = params;
 
     this.setEnums(cost);
+    this.running = false;
 
     this.steps = 0;
     this.points = {};
-    this.field = this.prepareField({ field, rules });
     this.openedList = [];
     this.closedList = [];
-    this.root = [];
+    this.route = [];
     this.orthogonalMode = orthogonal;
-    this.running = false;
+    this.rules = rules;
+
+    this.update(field);
   }
 
   get width() {
@@ -34,8 +36,8 @@ class Astar {
     return list.filter(({ x: lx, y: ly }) => lx === x && ly === y).length > 0;
   }
 
-  getRoot({ x, y }) {
-    this.root.push({ x, y });
+  getRoute({ x, y }) {
+    this.route.push({ x, y });
 
     let parent;
     let px = x;
@@ -44,13 +46,13 @@ class Astar {
     do {
       parent = this.closedList.find(({ x, y }) => x === px && y === py).parent;
       if (parent) {
-        this.root.push(parent);
+        this.route.push(parent);
         px = parent.x;
         py = parent.y;
       }
     } while (parent);
 
-    this.root.reverse();
+    this.route.reverse();
   }
 
   checkAdjacent({ x, y, g }) {
@@ -90,7 +92,7 @@ class Astar {
         this.closedList.push(
           this.openedList.splice(this.openedList.findIndex(({ x, y }) => x === nx && y === ny), 1)[0]
         );
-        this.getRoot({ x: nx, y: ny });
+        this.getRoute({ x: nx, y: ny });
       }
     });
   }
@@ -107,11 +109,10 @@ class Astar {
   step() {
     this.steps += 1;
 
-    debugger;
     const nextPointIdx = this.openedList.findIndex(({ f }) => f === Math.min(...this.openedList.map(({ f }) => f)));
     if (nextPointIdx === -1) {
       if (this.running) {
-        return { route: [], steps: this.steps, message: "-- no route" };
+        return this.route.length ? this.returnData("-- ok") : this.returnData("-- no route");
       }
 
       this.running = true;
@@ -123,11 +124,29 @@ class Astar {
     this.closedList.push(this.openedList.splice(nextPointIdx, 1)[0]);
     this.checkAdjacent(this.closedList[this.closedList.length - 1]);
 
-    if (this.root.length === 0) {
+    if (this.route.length === 0) {
       return this.step();
     } else {
-      return { root: this.root, steps: this.steps, message: "-- ok" };
+      return this.returnData("-- ok");
     }
+  }
+
+  returnData(message) {
+    const data = { route: [...this.route], steps: this.steps, message };
+    this.reset();
+    return data;
+  }
+
+  reset() {
+    this.running = false;
+    this.openedList.length = 0;
+    this.closedList.length = 0;
+    this.route.length = 0;
+    this.steps = 0;
+  }
+
+  update(field) {
+    this.field = this.prepareField(field);
   }
 
   setStartEnd() {
@@ -135,11 +154,11 @@ class Astar {
     this.field[this.points.end.y][this.points.end.x] = this.fieldEnum.end;
   }
 
-  prepareField({ field, rules }) {
-    const { wall, empty } = rules;
+  prepareField(field) {
+    const { wall, empty } = this.rules;
 
-    return field.map((row, y) =>
-      row.map((e, x) => {
+    return field.map(row =>
+      row.map(e => {
         if (eval(e + wall)) {
           return this.fieldEnum.wall;
         } else if (eval(e + empty)) {
@@ -189,7 +208,7 @@ class Astar {
 const params = {
   field: [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -207,4 +226,4 @@ const params = {
   orthogonal: true
 };
 const aStar = new Astar(params);
-console.log(aStar.go({ start: { x: 0, y: 0 }, end: { x: 1, y: 0 } }));
+console.log(aStar.go({ start: { x: 0, y: 0 }, end: { x: 9, y: 9 } }));

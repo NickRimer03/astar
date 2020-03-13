@@ -1,4 +1,4 @@
-class Astar {
+export default class Astar {
   constructor(params = {}) {
     const { field = [[]], rules, cost, orthogonal = false } = params;
 
@@ -204,26 +204,3 @@ class Astar {
     Object.freeze(this.fieldEnum);
   }
 }
-
-const params = {
-  field: [
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 1, 1],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  ],
-  rules: {
-    wall: ">0",
-    empty: "===0"
-  },
-  cost: { easy: 10, hard: 14 },
-  orthogonal: true
-};
-const aStar = new Astar(params);
-console.log(aStar.go({ start: { x: 0, y: 0 }, end: { x: 9, y: 9 } }));

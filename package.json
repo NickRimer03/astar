@@ -1,0 +1,12 @@
+{
+  "name": "astar",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NickRimer03/astar.git"
+  },
+  "author": "Nick Rimer",
+  "license": "MIT",
+  "dependencies": {}
+}
